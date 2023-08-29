@@ -2,7 +2,7 @@
  * @name DisplayServersAsChannels
  * @author DevilBro
  * @authorId 278543574059057154
- * @version 1.6.9
+ * @version 1.7.0
  * @description Displays Servers in a similar way as Channels
  * @invite Jx3TjNS
  * @donate https://www.paypal.me/MircoWittrien
@@ -14,9 +14,7 @@
 
 module.exports = (_ => {
 	const changeLog = {
-		"fixed": {
-			"ServerFolders Compatibility": "Better works with ServerFolders Plugin now"
-		}
+		
 	};
 
 	return !window.BDFDB_Global || (!window.BDFDB_Global.loaded && !window.BDFDB_Global.started) ? class {
@@ -96,10 +94,6 @@ module.exports = (_ => {
 					}
 					${BDFDB.dotCN.forumpagelist} {
 						justify-content: flex-start;
-					}
-					${BDFDB.dotCN.guilds} [style*="--folder-color"] ${BDFDB.dotCN.guildfolderexpandedbackground} {
-						background: var(--folder-color) !important;
-						opacity: 0.2 !important;
 					}
 				`;
 			}
@@ -234,7 +228,7 @@ module.exports = (_ => {
 			processFolderHeader (e) {
 				if (!e.instance.props.folderNode) return;
 				e.returnvalue = this.removeMask(e.returnvalue, true);
-				let folderColor = BDFDB.ColorUtils.convert(e.instance.props.folderNode.color, "HEX") || "var(--bdfdb-blurple)";
+				let folderColor = BDFDB.ColorUtils.convert(e.instance.props.folderNode.color, "HEX") || BDFDB.ColorUtils.convert(BDFDB.DiscordConstants.Colors.BRAND, "RGB");
 				let folderSize = Math.round(this.settings.amounts.serverElementHeight * 0.725);
 				let badge = null;
 				let [children, index] = BDFDB.ReactUtils.findParent(e.returnvalue, {props: [["className", BDFDB.disCN.guildfoldericonwrapper]]});
@@ -257,7 +251,7 @@ module.exports = (_ => {
 			
 			processFolderItemWrapper (e) {
 				if (!e.instance.props.folderNode) return;
-				let folderColor = this.settings.general.addFolderColor && BDFDB.LibraryStores.ExpandedGuildFolderStore.isFolderExpanded(e.instance.props.folderNode.id) && BDFDB.ColorUtils.convert(e.instance.props.folderNode.color, "HEX");
+				let folderColor = this.settings.general.addFolderColor && BDFDB.LibraryStores.ExpandedGuildFolderStore.isFolderExpanded(e.instance.props.folderNode.id) && (BDFDB.ColorUtils.convert(e.instance.props.folderNode.color, "HEX") || BDFDB.ColorUtils.convert(BDFDB.DiscordConstants.Colors.BRAND, "RGB"));
 				if (folderColor) e.returnvalue = BDFDB.ReactUtils.createElement("div", {
 					style: {"--folder-color": folderColor},
 					children: e.returnvalue
@@ -445,6 +439,9 @@ module.exports = (_ => {
 					${BDFDB.dotCNS._displayserversaschannelsstyled + BDFDB.dotCNS.guildswrapper + BDFDB.dotCNS._displayserversaschannelsmuted + BDFDB.dotCN._displayserversaschannelsname} {
 						opacity: 0.6;
 					}
+					${BDFDB.dotCNS._displayserversaschannelsstyled + BDFDB.dotCNS.guildswrapper + BDFDB.dotCNS._displayserversaschannelsmuted + BDFDB.dotCNS.guildiconselected + BDFDB.dotCN._displayserversaschannelsname} {
+						opacity: 1;
+					}
 					${BDFDB.dotCNS._displayserversaschannelsstyled + BDFDB.dotCNS.guildswrapper + BDFDB.dotCNS.guildiconchildwrapper + BDFDB.dotCN._displayserversaschannelsbadge}:not(:empty) {
 						display: flex;
 						margin-right: 4px;
@@ -525,11 +522,15 @@ module.exports = (_ => {
 					}
 					${BDFDB.dotCNS._displayserversaschannelsstyled + BDFDB.dotCNS.guildswrapper + BDFDB.dotCN.guildfolderexpandedbackground} {
 						top: -2px;
-						right: 2px;
+						right: 10px;
 						bottom: -2px;
 						left: 6px;
 						width: auto;
 						border-radius: 4px;
+					}
+					${BDFDB.dotCNS._displayserversaschannelsstyled + BDFDB.dotCN.guildswrapper} [style*="--folder-color"] ${BDFDB.dotCN.guildfolderexpandedbackground} {
+						background: var(--folder-color) !important;
+						opacity: 0.2 !important;
 					}
 					${BDFDB.dotCNS._displayserversaschannelsstyled + BDFDB.dotCNS.guildswrapper + BDFDB.dotCN.guildfolderwrapper} [role="group"] {
 						height: auto !important;
@@ -596,11 +597,11 @@ module.exports = (_ => {
 						border-radius: 4px;
 						overflow: hidden;
 					}
-					${BDFDB.dotCNS._displayserversaschannelsstyled + BDFDB.dotCNS.guildswrapper + BDFDB.dotCN.guildplaceholdermask},
+					${BDFDB.dotCNS._displayserversaschannelsstyled + BDFDB.dotCNS.guildswrapper + BDFDB.dotCN.guildplaceholdermask} {
 						background-color: var(--background-primary);
 						border-radius: 4px;
 						height: ${this.settings.amounts.serverElementHeight}px;
-						width: ${this.settings.amounts.serverListWidth}px;
+						width: ${this.settings.amounts.serverListWidth - 20}px;
 					}
 					${BDFDB.dotCNS._displayserversaschannelsstyled + BDFDB.dotCNS.guildswrapper + BDFDB.dotCN.guildplaceholdermask} > *,
 						display: none;
